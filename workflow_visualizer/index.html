@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Workflow Visualizer</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            accent: '#38bdf8',
+                            secondary: '#818cf8',
+                            surface: '#1e293b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- GSAP -->
+    <script src="gsap.min.js"></script>
+    <script src="Flip.min.js"></script>
+    <!-- Motion -->
+    <script src="motion.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        .step-image-container {
+            perspective: 1000px;
+        }
+
+        .step-image {
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-white/5">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold tracking-tight">
+                <span class="gradient-text">Workflow</span> Visualizer
+            </h1>
+            <nav class="hidden md:flex space-x-6 text-sm font-medium text-slate-400">
+                <a href="#" class="hover:text-white transition-colors">Overview</a>
+                <a href="#" class="hover:text-white transition-colors">Flows</a>
+                <a href="#" class="hover:text-white transition-colors">Analysis</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow pt-24 px-6 pb-12 container mx-auto relative">
+
+        <!-- Hero Section -->
+        <div id="hero" class="text-center py-12 mb-12">
+            <h2 class="text-5xl font-extrabold mb-6 leading-tight">
+                Explore Complex <span class="gradient-text">Business Flows</span>
+            </h2>
+            <p class="text-slate-400 max-w-2xl mx-auto text-lg">
+                Interactive visualization of insurance processing workflows.
+                Select a module below to begin the analysis.
+            </p>
+        </div>
+
+        <!-- Menu Grid -->
+        <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            <!-- Cards will be injected here by JS -->
+        </div>
+
+        <!-- Detail View Overlay (Hidden by default) -->
+        <div id="detail-view" class="fixed inset-0 z-50 bg-[#0f172a] hidden flex flex-col">
+            <!-- Detail Header -->
+            <div class="px-6 py-4 glass-panel flex justify-between items-center border-b border-white/10">
+                <div class="flex items-center space-x-4">
+                    <button id="back-btn" class="p-2 rounded-full hover:bg-white/10 transition-colors group">
+                        <svg class="w-6 h-6 text-slate-400 group-hover:text-white" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                    </button>
+                    <div>
+                        <h3 id="flow-title" class="text-xl font-bold text-white">Flow Title</h3>
+                        <p id="flow-subtitle" class="text-xs text-slate-400">Step <span id="current-step-num">1</span>
+                            of <span id="total-steps-num">10</span></p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="prev-step"
+                        class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Previous</button>
+                    <button id="next-step"
+                        class="px-4 py-2 rounded-lg bg-brand-accent hover:bg-blue-400 text-slate-900 text-sm font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Next</button>
+                </div>
+            </div>
+
+            <!-- Detail Content -->
+            <div class="flex-grow flex overflow-hidden">
+                <!-- Sidebar: Step List -->
+                <div class="w-1/4 glass-panel border-r border-white/10 overflow-y-auto hidden lg:block"
+                    id="steps-sidebar">
+                    <div class="p-4 space-y-2" id="steps-list">
+                        <!-- Step items injected here -->
+                    </div>
+                </div>
+
+                <!-- Main Step Display -->
+                <div class="flex-grow flex flex-col lg:flex-row relative">
+                    <!-- Visual Area -->
+                    <div
+                        class="flex-1 p-8 flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800 relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-20 pointer-events-none">
+                            <div
+                                class="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20">
+                            </div>
+                        </div>
+
+                        <div id="visual-container"
+                            class="relative w-full max-w-4xl aspect-video bg-black/50 rounded-xl border border-white/10 shadow-2xl overflow-hidden flex items-center justify-center group">
+                            <img id="step-image" src="" alt="Step Visualization"
+                                class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
+                            <div id="image-loader"
+                                class="absolute inset-0 flex items-center justify-center bg-slate-900">
+                                <div
+                                    class="w-8 h-8 border-2 border-brand-accent border-t-transparent rounded-full animate-spin">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Info Area -->
+                    <div
+                        class="w-full lg:w-1/3 glass-panel border-l border-white/10 p-8 flex flex-col justify-center relative z-10 md:min-w-[400px]">
+                        <div id="step-info-content" class="space-y-6">
+                            <div
+                                class="inline-flex items-center px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-brand-accent text-xs font-bold uppercase tracking-wider mb-2">
+                                <span id="step-phase">Phase 1</span>
+                            </div>
+                            <h2 id="step-intent" class="text-3xl font-bold text-white leading-tight">Step Intent</h2>
+
+                            <div class="space-y-4 text-slate-300">
+                                <div class="flex items-start">
+                                    <div
+                                        class="mt-1 mr-3 flex-shrink-0 w-5 h-5 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400">
+                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <span class="block text-xs text-slate-500 uppercase font-semibold">Action</span>
+                                        <p id="step-action" class="text-sm">Click the button</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start">
+                                    <div
+                                        class="mt-1 mr-3 flex-shrink-0 w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <span class="block text-xs text-slate-500 uppercase font-semibold">Result</span>
+                                        <p id="step-result" class="text-sm">Dialog opens</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white/5 rounded-lg p-4 mt-4 border border-white/5">
+                                    <span
+                                        class="block text-xs text-slate-500 uppercase font-semibold mb-2">Strategy</span>
+                                    <p id="step-strategy" class="text-xs font-mono text-slate-400">
+                                        identification_strategy...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="bg-gray-800 h-1 w-full">
+                <div id="progress-bar" class="bg-brand-accent h-full w-0 transition-all duration-300"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
