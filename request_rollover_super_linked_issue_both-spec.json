@@ -1,0 +1,506 @@
+{
+  "flow_id": "request_rollover_super_linked_issue_both",
+  "metadata": {
+    "app": "Neos Life",
+    "app_url": "https://r11uat3.neoslife.com.au/",
+    "flow_type": "End-to-End Processing",
+    "source": "Scribe Export",
+    "original_title": "How to Request Rollover for a Super with Linked Ordinary Plan and Proceeding to Issue Both Plans",
+    "goal": "Request Super Rollover funds and issue both Linked and Ordinary plans",
+    "total_steps": 67,
+    "estimated_duration": "45-60 minutes (excluding async wait)",
+    "complexity": "very_high"
+  },
+  "prerequisites": [
+    "User is authenticated in Neos Life system",
+    "Both Super and Ordinary linked plans exist",
+    "Plans are in Proposal status",
+    "Payment details are configured for both plans"
+  ],
+  "phases": [
+    {
+      "phase_id": "phase-1",
+      "name": "Validation",
+      "description": "Find and open plan, verify requirements and payment details for both plans",
+      "steps_range": "1-13"
+    },
+    {
+      "phase_id": "phase-2",
+      "name": "Request Funds (Rollover)",
+      "description": "Initiate the rollover request for Super funds",
+      "steps_range": "14-16"
+    },
+    {
+      "phase_id": "phase-3",
+      "name": "Workflow Management (Wait for Rollover)",
+      "description": "Monitor rollover request, manage tasks, create tracking task",
+      "steps_range": "17-42",
+      "async_wait": true,
+      "typical_wait_duration": "2-3 days"
+    },
+    {
+      "phase_id": "phase-4",
+      "name": "Issuance (Post-Rollover)",
+      "description": "Verify rollover success, issue both Super and Ordinary plans",
+      "steps_range": "43-67"
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "step-1-2",
+      "phase": "phase-1",
+      "intent": "Find and Open Plan",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "search",
+          "ui_element": {
+            "type": "input",
+            "label": "Search Field",
+            "identification_strategy": [
+              "role=searchbox",
+              "input[type='search']"
+            ]
+          },
+          "input_value": "[Plan Number]"
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "link",
+            "label": "Plan Details",
+            "identification_strategy": [
+              "role=link with plan number",
+              "Search result row"
+            ]
+          }
+        }
+      ],
+      "precondition": "User is on application home page",
+      "resulting_state": "Plan detail page is displayed",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-3-7",
+      "phase": "phase-1",
+      "intent": "Verify Ordinary Plan Requirements & Payment Details",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "tab",
+            "label": "Diary & Workflow"
+          }
+        },
+        {
+          "action": "verify",
+          "ui_element": {
+            "type": "text",
+            "label": "Periodic Debits"
+          },
+          "condition": "Payment details present"
+        }
+      ],
+      "precondition": "Plan detail page is displayed",
+      "resulting_state": "Ordinary plan payment details verified",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-8-10",
+      "phase": "phase-1",
+      "intent": "Switch to Super Plan & Validate",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "link",
+            "label": "Linked Policy Number",
+            "identification_strategy": [
+              "role=link with Super plan number"
+            ]
+          }
+        },
+        {
+          "action": "verify",
+          "ui_element": {
+            "type": "text",
+            "label": "Life Insured Benefits"
+          }
+        },
+        {
+          "action": "check_business_logic",
+          "description": "Check if DOB/Birthday impacts premiums",
+          "notes": "Important for premium calculations"
+        }
+      ],
+      "precondition": "Ordinary plan verification complete",
+      "resulting_state": "Super plan displayed and benefits verified",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-11-13",
+      "phase": "phase-1",
+      "intent": "Verify Super Plan Payment Details",
+      "action": "verify",
+      "ui_element": {
+        "type": "text",
+        "label": "Periodic Debits",
+        "visual_location": "Payment details section",
+        "identification_strategy": [
+          "Text containing 'Periodic Debits'",
+          "Payment details panel"
+        ]
+      },
+      "precondition": "Super plan detail page is displayed",
+      "resulting_state": "Super plan payment details verified",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-14-16",
+      "phase": "phase-2",
+      "intent": "Initiate Rollover Request",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "Create ROM",
+            "visual_location": "Action panel",
+            "identification_strategy": [
+              "role=button with name='Create ROM'",
+              "Button containing 'ROM'"
+            ]
+          }
+        },
+        {
+          "action": "select",
+          "ui_element": {
+            "type": "dropdown",
+            "label": "Transaction Type",
+            "identification_strategy": [
+              "role=combobox with label='Transaction Type'"
+            ]
+          },
+          "select_value": "New Business"
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "Save",
+            "identification_strategy": [
+              "role=button with name='Save'"
+            ]
+          }
+        }
+      ],
+      "precondition": "Super plan payment details verified",
+      "resulting_state": "Rollover request (ROM) created",
+      "confidence": "high",
+      "notes": "ROM = Rollover Message - initiates fund transfer request"
+    },
+    {
+      "step_id": "step-17-25",
+      "phase": "phase-3",
+      "intent": "Monitor Rollover Request Task",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "verify",
+          "ui_element": {
+            "type": "text",
+            "label": "Diary Task: Super message - New business rollover request",
+            "identification_strategy": [
+              "Task containing 'rollover request'"
+            ]
+          }
+        },
+        {
+          "action": "update_task",
+          "new_status": "In Progress",
+          "follow_up": "2-3 days"
+        }
+      ],
+      "precondition": "ROM has been created",
+      "resulting_state": "Rollover request task is being monitored",
+      "confidence": "high",
+      "notes": "Async wait point - rollover response typically takes 2-3 days"
+    },
+    {
+      "step_id": "step-26-27",
+      "phase": "phase-3",
+      "intent": "Clean up Super Plan Tasks",
+      "action": "update_task",
+      "task_filter": "Other open tasks on Super plan",
+      "new_status": "Completed",
+      "precondition": "Rollover request task is set up",
+      "resulting_state": "Super plan tasks cleaned up",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-28-35",
+      "phase": "phase-3",
+      "intent": "Clean up Ordinary Plan Tasks",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "link",
+            "label": "Linked Policy Number (Ordinary)",
+            "identification_strategy": [
+              "role=link with Ordinary plan number"
+            ]
+          }
+        },
+        {
+          "action": "update_task",
+          "task_filter": "Open tasks",
+          "new_status": "Completed"
+        }
+      ],
+      "precondition": "Super plan tasks cleaned up",
+      "resulting_state": "Ordinary plan tasks cleaned up",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-36-42",
+      "phase": "phase-3",
+      "intent": "Create Tracking Task on Ordinary Plan",
+      "action": "create_task",
+      "task_details": {
+        "event": "Await concurrent rollover",
+        "task_name": "Await concurrent rollover",
+        "status": "In Progress",
+        "follow_up": "2 weeks"
+      },
+      "precondition": "Ordinary plan tasks cleaned up",
+      "resulting_state": "Tracking task created for rollover wait",
+      "confidence": "high",
+      "notes": "This marks end of Phase 3 - async wait for rollover response"
+    },
+    {
+      "step_id": "step-43-44",
+      "phase": "phase-4",
+      "intent": "Verify Rollover Success (Super Plan)",
+      "action": "verify",
+      "ui_element": {
+        "type": "text",
+        "label": "Rollover Response Message",
+        "visual_location": "Diary & Workflow",
+        "identification_strategy": [
+          "Task containing 'rollover response'",
+          "Super Message with rollover status"
+        ]
+      },
+      "condition": "Response is Successful (Funds Received)",
+      "precondition": "Rollover response has been received (async)",
+      "resulting_state": "Rollover success confirmed",
+      "confidence": "high",
+      "notes": "CRITICAL: Do not proceed if rollover response is a rejection"
+    },
+    {
+      "step_id": "step-45-47",
+      "phase": "phase-4",
+      "intent": "Verify Ordinary Plan Readiness",
+      "action": "verify",
+      "ui_element": {
+        "type": "text",
+        "label": "Diary & Workflow",
+        "visual_location": "Ordinary plan workflow section",
+        "identification_strategy": [
+          "Diary & Workflow tab content"
+        ]
+      },
+      "condition": "No new blocks/instructions",
+      "precondition": "Rollover success confirmed",
+      "resulting_state": "Ordinary plan ready for issuance",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-48-57",
+      "phase": "phase-4",
+      "intent": "Issue Super Plan",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "link",
+            "label": "Linked Policy Number (Super)"
+          }
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "Issue"
+          }
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "OK"
+          }
+        },
+        {
+          "action": "select",
+          "ui_element": {
+            "type": "checkbox",
+            "label": "Benefits"
+          }
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "Issue (Final)"
+          }
+        },
+        {
+          "action": "update_task",
+          "new_status": "Completed"
+        }
+      ],
+      "precondition": "Rollover funds received, Ordinary plan ready",
+      "resulting_state": "Super plan issued - status 'In Force'",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-58-67",
+      "phase": "phase-4",
+      "intent": "Issue Ordinary Plan",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "link",
+            "label": "Linked Policy Number (Ordinary)"
+          }
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "Issue"
+          }
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "OK"
+          }
+        },
+        {
+          "action": "select",
+          "ui_element": {
+            "type": "checkbox",
+            "label": "Benefits"
+          }
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "Issue (Final)"
+          }
+        },
+        {
+          "action": "update_task",
+          "new_status": "Completed"
+        }
+      ],
+      "precondition": "Super plan issued",
+      "resulting_state": "Ordinary plan issued - status 'In Force'",
+      "confidence": "high"
+    }
+  ],
+  "postconditions": [
+    "Super Plan Status: 'In Force'",
+    "Ordinary Plan Status: 'In Force'",
+    "Rollover funds received and applied",
+    "All workflow tasks: 'Completed'",
+    "RCD matches on both plans"
+  ],
+  "automation_notes": {
+    "critical_validations": [
+      "Ensure RCD matches on both plans",
+      "Do not issue if Rollover Response is a rejection",
+      "Verify DOB/Birthday impact on premiums before proceeding"
+    ],
+    "async_wait_points": [
+      {
+        "location": "Between Phase 3 and Phase 4",
+        "description": "Wait for rollover response from Super fund",
+        "typical_duration": "2-3 days",
+        "trigger": "Super message - rollover response received"
+      }
+    ],
+    "critical_decision_points": [
+      {
+        "step": "step-43-44",
+        "decision": "Rollover response status",
+        "if_success": "Proceed to issue both plans",
+        "if_failure": "Do NOT issue - investigate rejection reason"
+      }
+    ],
+    "reusable_sequences": [
+      {
+        "name": "verify_payment_details",
+        "steps": ["Navigate to Periodic Debits", "Verify payment details present"]
+      },
+      {
+        "name": "issue_plan",
+        "steps": ["Click Issue", "Click OK", "Select Benefits", "Click Issue (Final)"]
+      },
+      {
+        "name": "close_tasks",
+        "steps": ["Open task", "Set status Completed", "Save"]
+      },
+      {
+        "name": "create_tracking_task",
+        "steps": ["Create new task", "Set event/name", "Set status In Progress", "Set follow-up date"]
+      }
+    ]
+  },
+  "edge_cases": [
+    {
+      "scenario": "Rollover rejection",
+      "handling": "Do NOT proceed with issuance - investigate rejection reason, may need to re-request or use alternative funding"
+    },
+    {
+      "scenario": "Partial rollover",
+      "handling": "Verify sufficient funds received before proceeding"
+    },
+    {
+      "scenario": "RCD mismatch between plans",
+      "handling": "Ensure both plans have matching RCD values before issuing"
+    },
+    {
+      "scenario": "DOB/Birthday impacts premium",
+      "handling": "Recalculate premiums if birthday occurs during processing"
+    },
+    {
+      "scenario": "Rollover delayed beyond 2 weeks",
+      "handling": "Follow up with Super fund, update tracking task follow-up date"
+    }
+  ],
+  "business_rules": [
+    "Rollover request is asynchronous - flow assumes return > 1 day later",
+    "Both linked plans should have matching RCD",
+    "Super plan typically issued first (funds source)",
+    "Ordinary plan issued after Super plan confirmation"
+  ],
+  "terminology": {
+    "ROM": "Rollover Message - request to transfer funds from another Super fund",
+    "RCD": "Risk Commencement Date - when coverage begins",
+    "Super": "Superannuation fund (retirement savings)",
+    "SMSF": "Self-Managed Super Fund"
+  }
+}

@@ -1,0 +1,509 @@
+{
+  "flow_id": "process_standard_rates_application",
+  "metadata": {
+    "app": "Neos Life",
+    "app_url": "https://r11uat3.neoslife.com.au/",
+    "flow_type": "End-to-End Processing",
+    "source": "Scribe Export",
+    "original_title": "How to Process an Application Accepted as a Standard Rates by Underwriting",
+    "goal": "Validate acceptance terms against quote, ensure payment details, and issue plans upon confirmation",
+    "total_steps": 70,
+    "estimated_duration": "30-45 minutes",
+    "complexity": "very_high"
+  },
+  "prerequisites": [
+    "User is authenticated in Neos Life system",
+    "Application has been accepted at Standard Rates by Underwriting",
+    "Original quote/illustration is available",
+    "Both Ordinary and SMSF/Super plans exist (if linked)"
+  ],
+  "phases": [
+    {
+      "phase_id": "phase-1",
+      "name": "Validation",
+      "description": "Verify acceptance terms match original quote, check benefits, loadings, exclusions, and payment details",
+      "steps_range": "1-41"
+    },
+    {
+      "phase_id": "phase-2",
+      "name": "Task Update",
+      "description": "Close Standard Rates task, create 'Await Inforce' tracking task",
+      "steps_range": "42-45"
+    },
+    {
+      "phase_id": "phase-3",
+      "name": "Issuance",
+      "description": "Upon confirmation, issue both Ordinary and SMSF plans",
+      "steps_range": "46-70"
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "step-1",
+      "phase": "phase-1",
+      "intent": "Access the application",
+      "action": "navigate",
+      "ui_element": {
+        "type": "url",
+        "label": "Neos Life Application",
+        "url": "https://r11uat3.neoslife.com.au/"
+      },
+      "precondition": "User has valid credentials",
+      "resulting_state": "Application home page is displayed",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-06-20/80168f67-b51b-4a3d-89f2-d70ec32eaf64/ascreenshot_6d29dfc2523243db965390434706e4ed_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-2",
+      "phase": "phase-1",
+      "intent": "Open the specific plan",
+      "action": "click",
+      "ui_element": {
+        "type": "link",
+        "label": "Plan Number",
+        "visual_location": "Plan list / Search results",
+        "identification_strategy": [
+          "role=link containing plan number",
+          "Clickable text with plan ID format"
+        ]
+      },
+      "precondition": "Plan is visible in list",
+      "resulting_state": "Plan detail page is displayed",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-06-20/80168f67-b51b-4a3d-89f2-d70ec32eaf64/ascreenshot_9ab4874cddbf49798f5cabfa30a8d837_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-3",
+      "phase": "phase-1",
+      "intent": "Access workflow tasks",
+      "action": "click",
+      "ui_element": {
+        "type": "tab",
+        "label": "Diary & Workflow",
+        "visual_location": "Tab navigation bar",
+        "identification_strategy": [
+          "role=tab with name='Diary & Workflow'"
+        ]
+      },
+      "precondition": "Plan detail page is displayed",
+      "resulting_state": "Diary & Workflow panel is visible",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-06-20/8ad1b459-e85d-43f0-b559-99a390fd8cb6/ascreenshot_9c45233e174344cbb0ed8f933a9ed7c0_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-4",
+      "phase": "phase-1",
+      "intent": "View acceptance terms",
+      "action": "click",
+      "ui_element": {
+        "type": "link",
+        "label": "Standard Rates Task",
+        "visual_location": "Task list",
+        "identification_strategy": [
+          "role=row or role=link with text containing 'Standard Rates'",
+          "Task item indicating acceptance decision"
+        ]
+      },
+      "precondition": "Diary & Workflow panel is visible",
+      "resulting_state": "Standard Rates task detail is displayed",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-06-20/208bc5fd-e050-4f0b-a879-0349f7cb9e6d/ascreenshot_18a5c19665ef422d95fddaa996794c42_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-5",
+      "phase": "phase-1",
+      "intent": "Close task view",
+      "action": "click",
+      "ui_element": {
+        "type": "button",
+        "label": "Close Button (X)",
+        "visual_location": "Dialog header - top right",
+        "identification_strategy": [
+          "role=button with aria-label='Close'",
+          "Button with text 'X'"
+        ]
+      },
+      "precondition": "Task detail dialog is open",
+      "resulting_state": "Task detail dialog is closed",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-06-20/494228a2-3437-4116-9d9d-f59620fc002b/ascreenshot_808c3b0555c04f4dad7ca8ec334534a7_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-6",
+      "phase": "phase-1",
+      "intent": "Retrieve original quote",
+      "action": "click",
+      "ui_element": {
+        "type": "tab",
+        "label": "Correspondence",
+        "visual_location": "Tab navigation bar",
+        "identification_strategy": [
+          "role=tab with name='Correspondence'"
+        ]
+      },
+      "precondition": "Plan detail page is displayed",
+      "resulting_state": "Correspondence panel is visible",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-06-20/ab807a89-93e6-4df3-9b25-529d802d934d/ascreenshot_9d22654e79e341758f30389715ea6f5f_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-7-9",
+      "phase": "phase-1",
+      "intent": "Download and verify quote documents",
+      "action": "download",
+      "ui_element": {
+        "type": "link",
+        "label": "Revised Illustration PDF",
+        "visual_location": "Correspondence list",
+        "identification_strategy": [
+          "role=link with text containing 'Illustration' or 'Quote'",
+          "PDF download link"
+        ]
+      },
+      "precondition": "Correspondence panel is visible",
+      "resulting_state": "Quote document is downloaded for review",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-10-16",
+      "phase": "phase-1",
+      "intent": "Verify Plan Benefits against Underwriting Decision",
+      "action": "verify",
+      "ui_element": {
+        "type": "text",
+        "label": "Benefit Details",
+        "visual_location": "Benefits panel",
+        "identification_strategy": [
+          "Benefits section content",
+          "Smoker status field",
+          "Loadings section",
+          "Exclusions section"
+        ]
+      },
+      "verification_targets": [
+        "Benefit Details match quote",
+        "Smoker Status is correct",
+        "Loadings match underwriting decision",
+        "Exclusions match underwriting decision"
+      ],
+      "precondition": "Quote document is available for comparison",
+      "resulting_state": "All benefit details verified against quote",
+      "confidence": "high",
+      "notes": "Critical validation step - do not proceed if mismatches found"
+    },
+    {
+      "step_id": "step-17",
+      "phase": "phase-1",
+      "intent": "Switch to Linked Super Plan",
+      "action": "click",
+      "ui_element": {
+        "type": "link",
+        "label": "Super Plan Tab/Link",
+        "visual_location": "Linked plans section or navigation",
+        "identification_strategy": [
+          "role=link with Super plan number",
+          "Link containing 'Super' or 'SMSF'"
+        ]
+      },
+      "precondition": "Ordinary plan verification complete",
+      "resulting_state": "Super plan detail page is displayed",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-06-20/91433863-6e28-4e8d-b33e-3ee7e8f6e1e1/ascreenshot_1563061166964487822a18fcbd5fd931_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-18-24",
+      "phase": "phase-1",
+      "intent": "Verify Linked Plan Benefits",
+      "action": "verify",
+      "ui_element": {
+        "type": "text",
+        "label": "Benefit Details (Super)",
+        "visual_location": "Benefits panel",
+        "identification_strategy": [
+          "Benefits section content",
+          "Underwriting notes"
+        ]
+      },
+      "verification_targets": [
+        "Super plan benefit details match quote",
+        "Underwriting notes are consistent"
+      ],
+      "precondition": "Super plan detail page is displayed",
+      "resulting_state": "Super plan benefits verified",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-25-28",
+      "phase": "phase-1",
+      "intent": "Verify Payment Details (SMSF/Super)",
+      "action": "verify",
+      "ui_element": {
+        "type": "text",
+        "label": "Periodic Debits",
+        "visual_location": "Payment details section",
+        "identification_strategy": [
+          "Text containing 'Periodic Debits'",
+          "Payment details panel"
+        ]
+      },
+      "verification_targets": [
+        "Payment details are present",
+        "Debit schedule is configured"
+      ],
+      "precondition": "Super plan detail page is displayed",
+      "resulting_state": "Super plan payment details verified",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-29-41",
+      "phase": "phase-1",
+      "intent": "Verify Payment Details (Ordinary) and Return to Ordinary Plan",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "link",
+            "label": "Ordinary Plan"
+          }
+        },
+        {
+          "action": "verify",
+          "ui_element": {
+            "type": "text",
+            "label": "Periodic Debits"
+          }
+        }
+      ],
+      "precondition": "Super plan verification complete",
+      "resulting_state": "Ordinary plan payment details verified",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-42-45",
+      "phase": "phase-2",
+      "intent": "Manage Diary Tasks (Close Standard Rates, Open Await Inforce)",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "update_task",
+          "task_name": "Standard Rates",
+          "new_status": "Completed"
+        },
+        {
+          "action": "create_task",
+          "task_name": "Accepted - await inforce date",
+          "assignee": "Service Consultant",
+          "status": "In Progress",
+          "follow_up": "1-2 weeks"
+        }
+      ],
+      "precondition": "All validation steps complete",
+      "resulting_state": "Standard Rates task closed, Await Inforce task created",
+      "confidence": "high",
+      "notes": "This marks the end of Phase 1/2 - await external confirmation before Phase 3"
+    },
+    {
+      "step_id": "step-46",
+      "phase": "phase-3",
+      "intent": "Verify Confirmation received",
+      "action": "verify",
+      "ui_element": {
+        "type": "text",
+        "label": "Confirmation Task",
+        "visual_location": "Task list",
+        "identification_strategy": [
+          "Task containing 'Confirmation' or 'inforce'"
+        ]
+      },
+      "precondition": "External confirmation has been received (async wait)",
+      "resulting_state": "Confirmation to issue is verified",
+      "confidence": "high",
+      "notes": "Phase 3 begins after receiving external confirmation"
+    },
+    {
+      "step_id": "step-47-52",
+      "phase": "phase-3",
+      "intent": "Issue Ordinary Plan",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "tab",
+            "label": "Benefits"
+          }
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "Issue"
+          }
+        },
+        {
+          "action": "select",
+          "ui_element": {
+            "type": "checkbox",
+            "label": "All Benefits"
+          }
+        },
+        {
+          "action": "verify",
+          "target": "Premiums Match"
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "Issue (Final)"
+          }
+        }
+      ],
+      "precondition": "Confirmation received, Ordinary plan displayed",
+      "resulting_state": "Ordinary plan issued - status 'In Force'",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-53-59",
+      "phase": "phase-3",
+      "intent": "Close Ordinary Plan Tasks",
+      "action": "update_task",
+      "task_filter": "In Progress tasks",
+      "new_status": "Completed",
+      "precondition": "Ordinary plan is issued",
+      "resulting_state": "All Ordinary plan tasks completed",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-60",
+      "phase": "phase-3",
+      "intent": "Switch to SMSF Plan",
+      "action": "click",
+      "ui_element": {
+        "type": "link",
+        "label": "SMSF Plan",
+        "visual_location": "Linked plans section",
+        "identification_strategy": [
+          "role=link with SMSF plan number"
+        ]
+      },
+      "precondition": "Ordinary plan tasks completed",
+      "resulting_state": "SMSF plan detail page displayed",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-61-66",
+      "phase": "phase-3",
+      "intent": "Issue SMSF Plan",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "Issue"
+          }
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "OK"
+          }
+        },
+        {
+          "action": "select",
+          "ui_element": {
+            "type": "checkbox",
+            "label": "Confirmation Checkbox"
+          }
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "Issue"
+          }
+        }
+      ],
+      "precondition": "SMSF plan displayed",
+      "resulting_state": "SMSF plan issued - status 'In Force'",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-67-70",
+      "phase": "phase-3",
+      "intent": "Close SMSF Plan Tasks",
+      "action": "update_task",
+      "task_filter": "In Progress tasks",
+      "new_status": "Completed",
+      "precondition": "SMSF plan is issued",
+      "resulting_state": "All SMSF plan tasks completed",
+      "confidence": "high"
+    }
+  ],
+  "postconditions": [
+    "Ordinary Plan Status: 'In Force'",
+    "SMSF Plan Status: 'In Force'",
+    "All workflow tasks: 'Completed'",
+    "Premiums match original quote exactly"
+  ],
+  "automation_notes": {
+    "critical_validations": [
+      "Validate 'Smoker Status' strictly against the Quote",
+      "Validate 'Loadings' strictly against the Quote",
+      "Validate 'Exclusions' strictly against the Quote",
+      "Ensure Premiums match exactly before Issuing"
+    ],
+    "async_wait_points": [
+      {
+        "location": "Between Phase 2 and Phase 3",
+        "description": "Wait for external confirmation to issue",
+        "typical_duration": "1-2 weeks"
+      }
+    ],
+    "reusable_sequences": [
+      {
+        "name": "verify_benefits",
+        "steps": ["Navigate to Benefits", "Check each benefit detail", "Compare against quote"]
+      },
+      {
+        "name": "verify_payment_details",
+        "steps": ["Navigate to Periodic Debits", "Verify payment details present"]
+      },
+      {
+        "name": "issue_plan",
+        "steps": ["Click Benefits", "Click Issue", "Select benefits", "Verify premiums", "Click Issue"]
+      },
+      {
+        "name": "close_tasks",
+        "steps": ["Open task", "Set status Completed", "Save"]
+      }
+    ]
+  },
+  "edge_cases": [
+    {
+      "scenario": "Benefit mismatch with quote",
+      "handling": "Do not proceed - escalate to underwriting for clarification"
+    },
+    {
+      "scenario": "Premium discrepancy",
+      "handling": "Do not issue - verify calculations and contact underwriting"
+    },
+    {
+      "scenario": "Missing payment details",
+      "handling": "Cannot proceed to issue - payment details required first"
+    },
+    {
+      "scenario": "Confirmation not received",
+      "handling": "Remain in Phase 2 - follow up per task schedule"
+    }
+  ],
+  "business_rules": [
+    "Standard Rates acceptance means no loadings or exclusions applied",
+    "Both linked plans should be issued together when possible",
+    "Payment details must be present before issuance",
+    "Premiums must match quote exactly"
+  ]
+}

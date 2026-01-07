@@ -1,0 +1,513 @@
+{
+  "flow_id": "issue_smsf_ordinary_linked",
+  "metadata": {
+    "app": "Neos Life",
+    "app_url": "https://r11uat3.neoslife.com.au/",
+    "flow_type": "End-to-End Issue Process",
+    "source": "Scribe Export",
+    "original_title": "How to Issue a SMSF and Ordinary Linked Plan",
+    "goal": "Issue both Ordinary and SMSF linked plans after acceptance",
+    "total_steps": 23,
+    "estimated_duration": "15-20 minutes",
+    "complexity": "high"
+  },
+  "prerequisites": [
+    "User is authenticated in Neos Life system",
+    "Both Ordinary and SMSF linked plans exist in Proposal status",
+    "Acceptance and confirmation to proceed has been received",
+    "Payment details are present in the system"
+  ],
+  "phases": [
+    {
+      "phase_id": "phase-1",
+      "name": "Access and Verification",
+      "description": "Navigate to the plan and verify confirmation received"
+    },
+    {
+      "phase_id": "phase-2",
+      "name": "Issue Ordinary Plan",
+      "description": "Issue the first (Ordinary) plan"
+    },
+    {
+      "phase_id": "phase-3",
+      "name": "Close Ordinary Tasks",
+      "description": "Complete workflow tasks for Ordinary plan"
+    },
+    {
+      "phase_id": "phase-4",
+      "name": "Issue SMSF Plan",
+      "description": "Issue the linked SMSF plan"
+    },
+    {
+      "phase_id": "phase-5",
+      "name": "Close SMSF Tasks",
+      "description": "Complete workflow tasks for SMSF plan"
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "step-1",
+      "phase": "phase-1",
+      "intent": "Access the Neos Life application",
+      "action": "navigate",
+      "ui_element": {
+        "type": "url",
+        "label": "Neos Life Application",
+        "url": "https://r11uat3.neoslife.com.au/"
+      },
+      "precondition": "User has valid credentials",
+      "resulting_state": "Application home page is displayed",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/f1e20087-60ce-4d24-b121-016d3ea7e227/File_d2f614bb74ea42a7959f125cf86175cb_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-2",
+      "phase": "phase-1",
+      "intent": "Open the target plan",
+      "action": "click",
+      "ui_element": {
+        "type": "link",
+        "label": "Plan Number",
+        "visual_location": "Plan list / Search results",
+        "identification_strategy": [
+          "role=link containing plan number",
+          "Clickable text with plan ID format",
+          "[data-testid='plan-number-link']"
+        ]
+      },
+      "precondition": "Plan is visible in list or search results",
+      "resulting_state": "Plan detail page is displayed",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/4af75c95-8314-4c4e-9461-50b7c95c5071/File_7b844f7196fb4afbb9398d38b8fec58c_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-3",
+      "phase": "phase-1",
+      "intent": "Access the workflow tasks",
+      "action": "click",
+      "ui_element": {
+        "type": "tab",
+        "label": "Diary & Workflow",
+        "visual_location": "Tab navigation bar",
+        "identification_strategy": [
+          "role=tab with name='Diary & Workflow'",
+          "Tab containing text 'Diary'",
+          "[data-testid='diary-workflow-tab']"
+        ]
+      },
+      "precondition": "Plan detail page is displayed",
+      "resulting_state": "Diary & Workflow panel is visible",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/06282164-abf8-4470-82cf-12de8fc58e75/File_8f590fe97eea43fa9cf399f33d78d17d_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-4",
+      "phase": "phase-1",
+      "intent": "Verify that the confirmation to inforce plan has been received",
+      "action": "verify",
+      "ui_element": {
+        "type": "text",
+        "label": "Confirmation received to inforce plan",
+        "visual_location": "Task List",
+        "identification_strategy": [
+          "Text containing 'Confirmation received'",
+          "Task item with 'inforce plan' text"
+        ]
+      },
+      "precondition": "Payment details must be present",
+      "resulting_state": "Confirmation task is visible and verified",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/eeb93fbb-4cca-4d48-93d5-339a94bdc9a7/File_42d7f981909345f7b071f3ea496b2ae1_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-5",
+      "phase": "phase-2",
+      "intent": "Navigate to plan benefits",
+      "action": "click",
+      "ui_element": {
+        "type": "tab",
+        "label": "Benefits",
+        "visual_location": "Tab navigation bar",
+        "identification_strategy": [
+          "role=tab with name='Benefits'",
+          "[data-testid='benefits-tab']"
+        ]
+      },
+      "precondition": "Plan detail page is displayed",
+      "resulting_state": "Benefits panel is visible",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/230dd268-f76f-407e-b060-03905cb2700c/File_668c06178acb4a91a7d229f86afc49f1_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-6",
+      "phase": "phase-2",
+      "intent": "View details for the life insured",
+      "action": "click",
+      "ui_element": {
+        "type": "link",
+        "label": "Life Insured Name/Row",
+        "visual_location": "Benefits list",
+        "identification_strategy": [
+          "role=row or role=link with life insured name",
+          "Clickable row in benefits table"
+        ]
+      },
+      "precondition": "Benefits panel is visible",
+      "resulting_state": "Life insured benefits are expanded/visible",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/12ce49c1-c3c7-4be3-b065-0c333156b990/File_416ab988c379403e95ed048c6751e4e1_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-7",
+      "phase": "phase-2",
+      "intent": "Initiate the issue process for the first plan",
+      "action": "click",
+      "ui_element": {
+        "type": "button",
+        "label": "Issue",
+        "visual_location": "Benefits panel action area",
+        "identification_strategy": [
+          "role=button with name='Issue'",
+          "Primary action button in benefits section"
+        ]
+      },
+      "precondition": "Life insured benefits are visible",
+      "resulting_state": "Issue dialog is displayed",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/84a36a1c-e89d-454e-943b-235d9c90b8aa/File_e780c0800a6f4842b0e201a4a81c05f3_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-8",
+      "phase": "phase-2",
+      "intent": "Set or verify the Risk Commencement Date (RCD)",
+      "action": "type",
+      "ui_element": {
+        "type": "input",
+        "label": "Issue Date/RCD Field",
+        "visual_location": "Issue dialog - date input",
+        "identification_strategy": [
+          "role=textbox with label containing 'Date'",
+          "input[type='date']"
+        ]
+      },
+      "input_value": "[Date] - Default: Today, or Backdated Date",
+      "precondition": "Issue dialog is displayed",
+      "resulting_state": "RCD is set",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/5a8852df-e8a5-4cd8-bd98-5f38fe0b9eb8/File_1b9d2d83573f4dea931f484fb08c9eaa_text_export.jpeg",
+      "confidence": "high",
+      "notes": "RCD can be backdated but not future dated"
+    },
+    {
+      "step_id": "step-9",
+      "phase": "phase-2",
+      "intent": "Select benefits to issue",
+      "action": "select",
+      "ui_element": {
+        "type": "checkbox",
+        "label": "Benefits Checkboxes",
+        "visual_location": "Issue dialog - benefits list",
+        "identification_strategy": [
+          "role=checkbox for each benefit",
+          "[data-testid='benefit-checkbox']"
+        ]
+      },
+      "precondition": "Issue dialog with benefits list is displayed",
+      "resulting_state": "Required benefits are selected",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/4f162503-db0c-4015-b3b3-072b81dfb65f/File_585b0138e8ab406a937765860915a28f_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-10",
+      "phase": "phase-2",
+      "intent": "Finalize issuance of the first plan",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "verify",
+          "ui_element": {
+            "type": "text",
+            "label": "Premium Amounts"
+          },
+          "verification": "Premiums match expected values"
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "Issue",
+            "identification_strategy": [
+              "role=button with name='Issue'",
+              "Primary action button in issue dialog"
+            ]
+          }
+        }
+      ],
+      "precondition": "Benefits selected and premiums displayed",
+      "resulting_state": "First plan is issued - status changes to 'In Force'",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/9091e08f-bfe4-4984-bf34-c6ad66f982fa/File_32747b837c744dc7af5988ceb05e3c04_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-11",
+      "phase": "phase-3",
+      "intent": "Return to workflow to close tasks",
+      "action": "click",
+      "ui_element": {
+        "type": "tab",
+        "label": "Diary & Workflow",
+        "visual_location": "Tab navigation bar",
+        "identification_strategy": [
+          "role=tab with name='Diary & Workflow'"
+        ]
+      },
+      "precondition": "Plan status has changed to 'In Force'",
+      "resulting_state": "Diary & Workflow panel is visible",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/4e74fbc3-3c44-4a3e-abea-9b470d05c481/user_cropped_screenshot_b0b2d733ba1b42c9bbbe61f42c06de95_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-12",
+      "phase": "phase-3",
+      "intent": "Open the In Progress task",
+      "action": "click",
+      "ui_element": {
+        "type": "link",
+        "label": "Task Item",
+        "visual_location": "Task list",
+        "identification_strategy": [
+          "role=row or role=link with task name",
+          "Task with status 'In Progress'"
+        ]
+      },
+      "precondition": "Diary & Workflow panel is visible",
+      "resulting_state": "Task detail dialog is open",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/c6f7dc1b-efd5-4ab2-a1b1-785eb55f5f03/File_ac7eefa6125446899b1ff01ada55b879_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-13",
+      "phase": "phase-3",
+      "intent": "Mark task as completed",
+      "action": "select",
+      "ui_element": {
+        "type": "dropdown",
+        "label": "Status Dropdown",
+        "visual_location": "Task detail dialog",
+        "identification_strategy": [
+          "role=combobox with label='Status'",
+          "[data-testid='task-status-dropdown']"
+        ]
+      },
+      "select_value": "Completed",
+      "precondition": "Task detail dialog is open",
+      "resulting_state": "Task status is set to 'Completed'",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/f2871396-70fd-4841-b2ff-4d76bc45d519/File_13225d6518174dc0a22b4a9899f670a2_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-14",
+      "phase": "phase-3",
+      "intent": "Save the task completion",
+      "action": "click",
+      "ui_element": {
+        "type": "button",
+        "label": "Save",
+        "visual_location": "Task detail dialog - footer",
+        "identification_strategy": [
+          "role=button with name='Save'",
+          "[data-testid='save-button']"
+        ]
+      },
+      "precondition": "Task status is set to 'Completed'",
+      "resulting_state": "Task is saved and marked complete",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/0189fda3-f113-4111-bf83-3097f866e778/File_c13b45a1388c4f6592c5e67ff7bfc74e_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-15",
+      "phase": "phase-4",
+      "intent": "Switch to the linked SMSF plan",
+      "action": "click",
+      "ui_element": {
+        "type": "link",
+        "label": "SMSF Plan Link/Tab",
+        "visual_location": "Linked plans section or navigation",
+        "identification_strategy": [
+          "role=link with SMSF plan number",
+          "Link containing 'SMSF' or linked plan ID"
+        ]
+      },
+      "precondition": "Ordinary plan tasks are completed",
+      "resulting_state": "SMSF plan detail page is displayed",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/2e942ac4-a307-49db-a9ee-c1a778283c7c/File_93e9a2915c9745f5915defcc5b63eaa6_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-16",
+      "phase": "phase-4",
+      "intent": "Initiate issue for SMSF plan",
+      "action": "click",
+      "ui_element": {
+        "type": "button",
+        "label": "Issue",
+        "visual_location": "Benefits panel action area",
+        "identification_strategy": [
+          "role=button with name='Issue'"
+        ]
+      },
+      "precondition": "SMSF plan detail page is displayed",
+      "resulting_state": "Issue dialog is displayed for SMSF plan",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/a8a3fdf7-ba8a-4b8e-88c6-ca978b81f6b9/File_f03dd0a209524c00b0ed0b4745dd9f07_text_export.jpeg",
+      "confidence": "high",
+      "notes": "Repeat issue steps similar to Ordinary plan"
+    },
+    {
+      "step_id": "step-17",
+      "phase": "phase-4",
+      "intent": "Confirm Date",
+      "action": "click",
+      "ui_element": {
+        "type": "button",
+        "label": "OK",
+        "visual_location": "Issue dialog - footer",
+        "identification_strategy": [
+          "role=button with name='OK'"
+        ]
+      },
+      "precondition": "Issue dialog is displayed",
+      "resulting_state": "Date is confirmed",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/ff27fd46-5feb-4f5b-ad07-3e46bade3db8/File_9bc183b2a0994127b2a681bb7b1b92e1_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-18",
+      "phase": "phase-4",
+      "intent": "Select benefits for SMSF",
+      "action": "select",
+      "ui_element": {
+        "type": "checkbox",
+        "label": "Benefit Checkbox",
+        "visual_location": "Issue dialog - benefits list",
+        "identification_strategy": [
+          "role=checkbox",
+          "[data-testid='benefit-checkbox']"
+        ]
+      },
+      "precondition": "Issue dialog with benefits is displayed",
+      "resulting_state": "SMSF benefits are selected",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/685433cc-920c-4b6a-879b-08da1e8ee5af/File_e9b6d1501e214146af0733870af8d43a_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-19",
+      "phase": "phase-4",
+      "intent": "Finalize SMSF Issue",
+      "action": "click",
+      "ui_element": {
+        "type": "button",
+        "label": "Issue",
+        "visual_location": "Issue dialog - footer",
+        "identification_strategy": [
+          "role=button with name='Issue'"
+        ]
+      },
+      "precondition": "SMSF benefits are selected",
+      "resulting_state": "SMSF plan is issued - status changes to 'In Force'",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/b0222616-208e-459e-b703-e5c7414082e8/File_700abce8619f4f00aa3ec729c1903e52_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-20",
+      "phase": "phase-5",
+      "intent": "Return to workflow",
+      "action": "click",
+      "ui_element": {
+        "type": "tab",
+        "label": "Diary & Workflow",
+        "visual_location": "Tab navigation bar",
+        "identification_strategy": [
+          "role=tab with name='Diary & Workflow'"
+        ]
+      },
+      "precondition": "SMSF plan is issued",
+      "resulting_state": "Diary & Workflow panel is visible",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/9272758c-9872-4e53-b250-74e9b07e3011/File_cc76b9975fd549b2b733e8bced0be97c_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-21-23",
+      "phase": "phase-5",
+      "intent": "Close SMSF tasks",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "link",
+            "label": "Task"
+          }
+        },
+        {
+          "action": "select",
+          "ui_element": {
+            "type": "dropdown",
+            "label": "Status"
+          },
+          "select_value": "Completed"
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "Save"
+          }
+        }
+      ],
+      "precondition": "SMSF Diary & Workflow panel is visible",
+      "resulting_state": "All SMSF tasks are marked complete",
+      "confidence": "high",
+      "notes": "Repeat for each In Progress task"
+    }
+  ],
+  "postconditions": [
+    "Ordinary Plan Status: 'In Force'",
+    "SMSF Plan Status: 'In Force'",
+    "All workflow tasks for both plans: 'Completed'"
+  ],
+  "automation_notes": {
+    "critical_validations": [
+      "Handle 'Linked' plans by ensuring the first plan is issued before expecting the second one to be ready",
+      "Verify status changes to 'In Force' for both plans",
+      "Ensure premiums match for both plans before issuing"
+    ],
+    "wait_conditions": [
+      "Wait for plan status to change after issue",
+      "Wait for task list to refresh after saving",
+      "Wait for linked plan to be accessible after first plan is issued"
+    ],
+    "reusable_sequences": [
+      {
+        "name": "issue_plan",
+        "steps": ["click Benefits tab", "click Issue", "set date", "select benefits", "verify premiums", "click Issue"]
+      },
+      {
+        "name": "close_task",
+        "steps": ["click task", "select Completed", "click Save"]
+      }
+    ]
+  },
+  "edge_cases": [
+    {
+      "scenario": "First plan issue fails",
+      "handling": "Do not proceed to SMSF plan - investigate and resolve first plan issue"
+    },
+    {
+      "scenario": "Linked plan not visible",
+      "handling": "Verify linked relationship exists in system before proceeding"
+    },
+    {
+      "scenario": "RCD mismatch between plans",
+      "handling": "Ensure both plans have matching RCD values"
+    }
+  ]
+}

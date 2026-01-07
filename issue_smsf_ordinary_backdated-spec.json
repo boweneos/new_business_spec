@@ -1,0 +1,266 @@
+{
+  "flow_id": "issue_smsf_ordinary_backdated",
+  "metadata": {
+    "app": "Insurance/Policy Management System",
+    "flow_type": "Static UI Interaction",
+    "source": "Scribe Export",
+    "original_title": "How to Issue a SMSF or Ordinary Plan with Risk Commencement Date Backdated",
+    "goal": "Issue a plan with a backdated Risk Commencement Date (RCD) and ensure premium accuracy",
+    "total_steps": 8,
+    "estimated_duration": "5-10 minutes",
+    "complexity": "medium"
+  },
+  "prerequisites": [
+    "User is authenticated in the Insurance/Policy Management System",
+    "Plan exists in Proposal status",
+    "Request to backdate RCD has been received and documented"
+  ],
+  "steps": [
+    {
+      "step_id": "step-1",
+      "intent": "Acknowledge the request to issue plans with backdated RCD",
+      "action": "verify",
+      "ui_element": {
+        "type": "text",
+        "label": "Request confirmation message or document",
+        "visual_location": "Main content area / Communication panel",
+        "identification_strategy": [
+          "Look for confirmation text containing 'backdate' or 'RCD'",
+          "Check diary/notes section for request documentation"
+        ]
+      },
+      "precondition": "Confirmation request exists in system",
+      "resulting_state": "User has verified the backdating request is valid",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-23/c6831fd1-c0ab-4ec8-8659-a5c5e6534351/user_cropped_screenshot_fc48951d4d5c4693b194d96d251f080b_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-2",
+      "intent": "Verify the specific backdating instructions in the diary note",
+      "action": "click",
+      "ui_element": {
+        "type": "button",
+        "label": "Open Diary Note",
+        "visual_location": "Diary/Notes section",
+        "identification_strategy": [
+          "role=button with text containing 'Diary' or 'Note'",
+          "Click on diary entry row",
+          "Look for expandable note item"
+        ]
+      },
+      "precondition": "Diary note with backdating instructions exists",
+      "resulting_state": "Diary note is open and visible with specific date requested",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-23/bf24fdba-e918-4f3c-bfd5-b2690d46917d/user_cropped_screenshot_404848b8f98e486a8ba89ed57d8b1cb1_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-3",
+      "intent": "Close the diary note after verification",
+      "action": "click",
+      "ui_element": {
+        "type": "button",
+        "label": "X",
+        "visual_location": "Dialog/Note header - top right corner",
+        "identification_strategy": [
+          "role=button with aria-label='Close'",
+          "Button with text 'X' or '×'",
+          "[data-testid='close-dialog']"
+        ]
+      },
+      "precondition": "Diary note dialog is open",
+      "resulting_state": "Diary note dialog is closed",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-23/a1946bef-bbcd-46dc-9546-464177cb65ff/user_cropped_screenshot_66f2cae6ac704d64ba5bb195b5ebd671_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-4",
+      "intent": "Navigate to the Issue action within the Benefits tab",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "tab",
+            "label": "Benefits",
+            "visual_location": "Tab navigation bar",
+            "identification_strategy": [
+              "role=tab with name='Benefits'",
+              "[data-testid='benefits-tab']"
+            ]
+          }
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "Issue",
+            "visual_location": "Benefits panel action area",
+            "identification_strategy": [
+              "role=button with name='Issue'",
+              "Button containing text 'Issue'"
+            ]
+          }
+        }
+      ],
+      "precondition": "User is on the plan detail page",
+      "resulting_state": "Issue dialog/panel is displayed",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-23/148e51b1-8302-4ea3-adc6-a9f72bfa5217/user_cropped_screenshot_fd95a57227a941fdb92fcf64af511d39_text_export.jpeg",
+      "confidence": "high"
+    },
+    {
+      "step_id": "step-5",
+      "intent": "Input the backdated Risk Commencement Date",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "type",
+          "ui_element": {
+            "type": "input",
+            "label": "RCD Date Field",
+            "visual_location": "Issue dialog - date input area",
+            "identification_strategy": [
+              "role=textbox with label containing 'Date' or 'RCD'",
+              "input[type='date']",
+              "[data-testid='rcd-date-input']"
+            ]
+          },
+          "input_value": "[Requested Backdated Date]"
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "OK",
+            "visual_location": "Issue dialog - footer",
+            "identification_strategy": [
+              "role=button with name='OK'",
+              "Button with text 'OK' in dialog"
+            ]
+          }
+        }
+      ],
+      "precondition": "Issue dialog is displayed",
+      "resulting_state": "RCD is set to the backdated value",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-22/012d1a12-4fb8-4070-91ed-01d50fa9218a/ascreenshot_c861515bf35343528d9257af7bee6d38_text_export.jpeg",
+      "confidence": "high",
+      "notes": "Date format must match system expectation (e.g., DD/MM/YYYY)"
+    },
+    {
+      "step_id": "step-6",
+      "intent": "Select the applicable benefits for the plan",
+      "action": "select",
+      "ui_element": {
+        "type": "checkbox",
+        "label": "All benefits",
+        "visual_location": "Benefits selection panel",
+        "identification_strategy": [
+          "role=checkbox for each benefit",
+          "Select all checkbox if available",
+          "[data-testid='benefit-checkbox']"
+        ]
+      },
+      "precondition": "Benefits selection panel is displayed",
+      "resulting_state": "All benefits are selected for issuance",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-23/ab1ec1e1-a24d-4484-8b1f-b318fff77c13/user_cropped_screenshot_e5999bb18fb14375a9d5e4bcdd9bd0ed_text_export.jpeg",
+      "confidence": "high",
+      "notes": "All benefits on a plan must have the same RCD"
+    },
+    {
+      "step_id": "step-7",
+      "intent": "Verify premiums and finalize issuance",
+      "action": "sequence",
+      "sub_steps": [
+        {
+          "action": "verify",
+          "ui_element": {
+            "type": "text",
+            "label": "Premium Amounts",
+            "visual_location": "Issue summary panel",
+            "identification_strategy": [
+              "Text containing 'Premium'",
+              "Numeric values in premium column"
+            ]
+          },
+          "verification": "Premiums before and after backdating are correct"
+        },
+        {
+          "action": "click",
+          "ui_element": {
+            "type": "button",
+            "label": "Issue",
+            "visual_location": "Issue panel - footer/action area",
+            "identification_strategy": [
+              "role=button with name='Issue'",
+              "Primary action button in issue panel"
+            ]
+          }
+        }
+      ],
+      "precondition": "Benefits are selected and premiums are displayed",
+      "resulting_state": "Plan issuance is initiated",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-23/fb77b5c3-a0c1-4d0d-b2d5-8c3323d9c8fa/user_cropped_screenshot_512544518c42404f8c97faf726356e99_text_export.jpeg",
+      "confidence": "high",
+      "notes": "This is the final commit action - verify premiums match before clicking"
+    },
+    {
+      "step_id": "step-8",
+      "intent": "Confirm the plan status update",
+      "action": "verify",
+      "ui_element": {
+        "type": "text",
+        "label": "Plan Status",
+        "visual_location": "Plan header/status area",
+        "identification_strategy": [
+          "Text containing 'In Force' or 'In force'",
+          "Status badge or indicator",
+          "[data-testid='plan-status']"
+        ]
+      },
+      "precondition": "Issue action has completed",
+      "resulting_state": "Plan status changed from 'Proposal' to 'In Force'",
+      "visual_reference": "https://colony-recorder.s3.amazonaws.com/files/2025-07-23/bd5b6c0e-76a7-49f4-9554-75b0d80ec88c/user_cropped_screenshot_d682aabf545f43759b9f30afb2657d07_text_export.jpeg",
+      "confidence": "high"
+    }
+  ],
+  "postconditions": [
+    "Plan Status: 'In Force'",
+    "Policy Issue Date: Set to the requested backdated date",
+    "Periodic debits: System has set up required debits to bring plan paid up to date"
+  ],
+  "automation_notes": {
+    "critical_validations": [
+      "Ensure RCD date format matches system expectation (e.g., DD/MM/YYYY)",
+      "Verify premiums match expected values before final Issue click"
+    ],
+    "wait_conditions": [
+      "Wait for Benefits tab to load before clicking Issue",
+      "Wait for Issue dialog to appear after clicking Issue button",
+      "Wait for status change confirmation after final Issue"
+    ],
+    "selector_recommendations": {
+      "preferred": [
+        "role=button with accessible name",
+        "role=tab with name",
+        "data-testid attributes"
+      ],
+      "avoid": [
+        "CSS class-based selectors",
+        "Positional selectors (nth-child)"
+      ]
+    }
+  },
+  "edge_cases": [
+    {
+      "scenario": "Date format mismatch",
+      "handling": "Ensure date picker or input accepts the system's expected format"
+    },
+    {
+      "scenario": "Premium calculation discrepancy",
+      "handling": "Do not proceed if premiums don't match expected values - escalate for review"
+    },
+    {
+      "scenario": "Benefits already issued",
+      "handling": "Check if any benefits are already in force before attempting to issue"
+    }
+  ]
+}
