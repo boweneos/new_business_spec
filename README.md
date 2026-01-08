@@ -4,7 +4,7 @@ This folder contains structured JSON specifications generated from the UI flow d
 
 ## 🌐 Interactive Workflow Visualizer
 
-View the interactive workflow visualizer at: **[GitHub Pages URL]** (will be available after deployment)
+View the interactive workflow visualizer at: **https://boweneos.github.io/new_business_spec/**
 
 The visualizer provides an interactive way to explore the workflow specifications with step-by-step visual guidance.
 
