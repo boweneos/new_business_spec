@@ -2,6 +2,12 @@
 
 This folder contains structured JSON specifications generated from the UI flow documentation in the `new_business/` folder using the **multimodal-ui-flow-analyzer** agent skill.
 
+## 🌐 Interactive Workflow Visualizer
+
+View the interactive workflow visualizer at: **[GitHub Pages URL]** (will be available after deployment)
+
+The visualizer provides an interactive way to explore the workflow specifications with step-by-step visual guidance.
+
 ## Generated Specifications
 
 | Source File | Spec File | Steps | Complexity | Description |
@@ -165,6 +171,55 @@ To regenerate specifications, use the multimodal-ui-flow-analyzer skill:
 Using the multimodal-ui-flow-analyzer skill, analyze the UI flow in 
 new_business/[filename].md and generate a structured specification.
 ```
+
+## 🚀 Deploying to GitHub Pages
+
+This repository is configured to automatically deploy the workflow visualizer to GitHub Pages using GitHub Actions.
+
+### Initial Setup
+
+1. **Enable GitHub Pages** (one-time setup):
+   ```bash
+   # Using GitHub CLI
+   gh repo edit --enable-pages --pages-branch gh-pages
+   ```
+
+2. **Push your changes** to trigger the deployment:
+   ```bash
+   git add .
+   git commit -m "Setup GitHub Pages deployment"
+   git push origin main
+   ```
+
+3. **The GitHub Action will automatically**:
+   - Build and deploy the `workflow_visualizer` folder to GitHub Pages
+   - Make it available at `https://[username].github.io/[repo-name]/`
+
+### Manual Deployment
+
+If you need to manually trigger a deployment:
+
+```bash
+# Using GitHub CLI
+gh workflow run deploy-pages.yml
+```
+
+### Viewing Deployment Status
+
+```bash
+# Check workflow runs
+gh run list --workflow=deploy-pages.yml
+
+# View details of the latest run
+gh run view
+```
+
+### Configuration
+
+The deployment is configured in `.github/workflows/deploy-pages.yml` and will:
+- Trigger on pushes to `main` or `master` branch
+- Deploy the `workflow_visualizer` directory
+- Be accessible via GitHub Pages URL
 
 ---
 
